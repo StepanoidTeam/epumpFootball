@@ -1,5 +1,7 @@
 'use strict';
 
+
+//todo: go to ball nearest stop, not the final one
 function getBallStats(ball, gameSettings) {
     const stopTime = getStopTime(ball);
     const stopDistance = ball.velocity * stopTime
@@ -23,11 +25,15 @@ function getDistance(point1, point2) {
     return Math.hypot(point1.x - point2.x, point1.y - point2.y);
 }
 
-function getNearestPoint(basePoint, ...points) {
+function getStopTime(ball) {
+    return ball.velocity / ball.settings.moveDeceleration;
+}
 
+
+function getNearestToPoint(targetPoint, ...points) {
     let pts = points.map(p => ({
         point: p,
-        distance: getDistance(basePoint, p)
+        distance: getDistance(targetPoint, p)
     }));
 
     let minPoint = pts.reduce((min, current) =>
@@ -37,14 +43,34 @@ function getNearestPoint(basePoint, ...points) {
 }
 
 
-function getStopTime(ball) {
-    return ball.velocity / ball.settings.moveDeceleration;
+function getNearestPlayerTo(data, point) {
+    return getNearestToPoint(point, ...data.yourTeam.players);
 }
+
+function playerIsNearestTo(data, player, point) {
+    return getNearestPlayerTo(data, point) === player;
+}
+
+function canAttack(data, player) {
+    return player.x < data.ball.x - data.ball.settings.radius;
+}
+
+function maxFitness(data) {
+    return Math.max(...data.yourTeam.players.map(player => getFitness(data, player)));
+}
+
+function getFitness(data, player) {
+    const ballStop = getBallStats(data.ball, data.settings);
+
+    return canAttack(data, player)
+        + (playerIsNearestTo(data, player, data.ball)
+        || playerIsNearestTo(data, player, ballStop));
+}
+
 
 function radiansFromVector({x, y}) {
     return Math.atan2(y, x);
 }
-
 
 //todo: do i need these?
 function radians(degrees) {
