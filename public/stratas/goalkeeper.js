@@ -3,29 +3,40 @@ importScripts('stratas/_helpers.js');
 function goalkeeperStrata(data) {
     const currentPlayer = data.yourTeam.players[data.playerIndex];
     const ball = data.ball;
+
     const ballStop = getBallStats(ball, data.settings);
-
-
     const playerDirection = getPlayerDir(data);
 
 
-    const isOffside = currentPlayer.x > ball.x - ball.settings.radius;
+    const def1 = {x: 200, y: 100};
+    const def2 = {x: 200, y: 370};
 
-    //const ballDiff = Math.abs(ballStop.y - currentPlayer.y);
+    const defPoints = [def1, def2];
 
-    const attackDirection = {
-        x: ballStop.x - currentPlayer.x,
-        y: ballStop.y - currentPlayer.y
-    };
 
-    if (isOffside) {
+    const isAttacker = canAttack(data, currentPlayer);
+    const isNearestToBall = playerIsNearestTo(data, currentPlayer, data.ball);
+    const isNearestToBallStop = playerIsNearestTo(data, currentPlayer, ballStop);
+
+    const maxFit = maxFitness(data);
+
+    const fitEnough = maxFit === getFitness(data, currentPlayer);
+
+
+    if (!isAttacker && fitEnough) {
         //ball is on backward
         const ballDeadZone = ball.settings.radius * 3;
 
-        const topPoint = {x: ball.x - ball.settings.radius, y: ball.y + ballDeadZone};
-        const bottomPoint = {x: ball.x - ball.settings.radius, y: ball.y - ballDeadZone};
+        const topPoint = {
+            x: ball.x - ball.settings.radius,
+            y: ball.y + ballDeadZone
+        };
+        const bottomPoint = {
+            x: ball.x - ball.settings.radius,
+            y: ball.y - ballDeadZone
+        };
 
-        let nearestDeadPoint = getNearestPoint(currentPlayer, topPoint, bottomPoint);
+        let nearestDeadPoint = getNearestToPoint(currentPlayer, topPoint, bottomPoint);
 
 
         const dir = {
@@ -41,13 +52,44 @@ function goalkeeperStrata(data) {
         }
     }
 
-    if (!isOffside) {
+    if (isAttacker && fitEnough) {
         //ball is on front
+
+        // const dir = {
+        //     x: ballStop.x - currentPlayer.x,
+        //     y: ballStop.y - currentPlayer.y
+        // };
+
+        // const dir = {
+        //     x: ball.x - ball.settings.radius - currentPlayer.x,
+        //     y: ball.y - currentPlayer.y
+        // };
+
+        const dir = {
+            x: ballStop.x - ball.settings.radius - currentPlayer.x,
+            y: ballStop.y - currentPlayer.y
+        };
+
+
         return {
-            direction: radiansFromVector(attackDirection),
+            direction: radiansFromVector(dir),
             velocity: 10
         };
     }
 
-    //noop?
+
+    //def strata
+
+    
+
+    defPoints
+
+
+
+    //noop
+    return {
+        direction: 0,
+        velocity: 0,
+    };
+
 }
