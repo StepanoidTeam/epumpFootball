@@ -1,7 +1,6 @@
 'use strict';
 
-//import {epamRushStrata} from '_stratas';
-importScripts('_stratas.js');
+importScripts('stratas/_index.js');
 
 let attacker = goalkeeperStrata;
 let defender = goalkeeperStrata;

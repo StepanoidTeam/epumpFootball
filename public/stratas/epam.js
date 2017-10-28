@@ -1,8 +1,10 @@
+importScripts('stratas/_helpers.js');
+
 //  Simple strategy : split the field into 3 parts (with 1:2:3 proportion) and each player will control its part.
 //
 //  Player 0 - goalkeeper
 //  Player 1 - defender
-//  Player 3 - playmaker
+//  Player 2 - playmaker
 //  /-----------------------+
 //  |   |      |            |
 //  |   |      |            |
@@ -12,9 +14,8 @@
 //  \-----------------------+
 //
 //  Each player is responcible to kick out the ball from its zone.
-'use strict';
 
-function getPlayerMove(data) {
+function epamStrata(data) {
   const currentPlayer = data.yourTeam.players[data.playerIndex];
   const sixthPartOfFieldWidth = data.settings.field.width / 6;
   const playerZoneStartX = sixthPartOfFieldWidth * [0, 1, 3][data.playerIndex];
@@ -57,32 +58,3 @@ function getPlayerMove(data) {
     velocity: velocity
   };
 }
-
-function getDirectionTo(startPoint, endPoint) {
-  return Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
-}
-
-function getDistance(point1, point2) {
-  return Math.hypot(point1.x-point2.x, point1.y - point2.y);
-}
-
-function getBallStats(ball, gameSettings) {
-  const stopTime = getStopTime(ball);
-  const stopDistance = ball.velocity * stopTime
-    - ball.settings.moveDeceleration * (stopTime + 1) * stopTime / 2;
-
-  const x = ball.x + stopDistance * Math.cos(ball.direction);
-  let y = Math.abs(ball.y + stopDistance * Math.sin(ball.direction));
-
-  // check the reflection from field side
-  if (y > gameSettings.field.height) y = 2 * gameSettings.field.height - y;
-
-  return { stopTime, stopDistance, x, y };
-}
-
-function getStopTime(ball) {
-  return ball.velocity / ball.settings.moveDeceleration;
-}
-
-
-onmessage = (e) => postMessage(getPlayerMove(e.data));

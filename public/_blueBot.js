@@ -1,15 +1,15 @@
 'use strict';
 
-//import {epamRushStrata} from '_stratas';
-importScripts('_stratas.js');
+importScripts('stratas/_index.js');
 
-// let attacker = epamRushStrata;
-// let defender = epamRushStrata;
-// let goalkeeper = goalkeeperStrata;
+// let attacker = epamStrata;
+// let defender = epamStrata;
+// let goalkeeper = epamStrata;
 
-let attacker = noopStrata;
-let defender = noopStrata;
-let goalkeeper = goalkeeperStrata;
+let attacker = rushStrata;
+let defender = rushStrata;
+let goalkeeper = rushStrata;
+
 
 function getPlayerMove(data) {
     return [attacker, goalkeeper, defender][data.playerIndex](data);
