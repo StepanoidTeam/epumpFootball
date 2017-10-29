@@ -18,6 +18,10 @@ function goalkeeperStrata(data) {
     const isNearestToBall = playerIsNearestTo(data, currentPlayer, data.ball);
     const isNearestToBallStop = playerIsNearestTo(data, currentPlayer, ballStop);
 
+
+    //todo: realize treugolnik
+    //const isForward = //todo: nearest to ball
+
     const maxFit = maxFitness(data);
 
     const fitEnough = maxFit === getFitness(data, currentPlayer);
@@ -80,7 +84,7 @@ function goalkeeperStrata(data) {
 
     //def strata
 
-    
+
 
     defPoints
 
