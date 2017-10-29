@@ -2,13 +2,13 @@
 
 importScripts('stratas/_index.js');
 
-// let attacker = epamStrata;
-// let defender = epamStrata;
-// let goalkeeper = epamStrata;
+let attacker = epamStrata;
+let defender = epamStrata;
+let goalkeeper = epamStrata;
 
-let attacker = rushStrata;
-let defender = rushStrata;
-let goalkeeper = rushStrata;
+// let attacker = rushStrata;
+// let defender = rushStrata;
+// let goalkeeper = rushStrata;
 
 
 function getPlayerMove(data) {
